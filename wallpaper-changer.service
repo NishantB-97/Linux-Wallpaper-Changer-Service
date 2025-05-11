@@ -1,0 +1,8 @@
+[Unit]
+Description=Change wallpaper every minute
+After=graphical-session.target
+
+[Service]
+ExecStart=/home/yourusername/wallpaper_changer.sh
+Type=oneshot
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
