@@ -1,6 +1,6 @@
 # 🖼️ GNOME Wallpaper Changer (with systemd)
 
-A lightweight and customizable solution to periodically change your **GNOME desktop wallpaper** using a Bash script and `systemd` user timer.  
+A lightweight and customizable solution to periodically change your **GNOME desktop wallpaper** using a `Bash script` and `systemd` user `timer`.  
 Perfect for learning Linux scripting, DBus, and systemd automation!
 
 ---
@@ -27,11 +27,7 @@ Perfect for learning Linux scripting, DBus, and systemd automation!
 
 Choose or create a directory for your wallpapers, for example:
 
-/home/yourusername/Pictures/Wallpapers
-
-bash
-Copy
-Edit
+`/home/yourusername/Pictures/Wallpapers`
 
 Update the script with your actual path.
 
@@ -48,30 +44,30 @@ WALLPAPER_DIR="/home/yourusername/Pictures/Wallpapers"
 WALLPAPER=$(find "$WALLPAPER_DIR" -type f | shuf -n 1)
 
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
+```
 
 gsettings set org.gnome.desktop.background picture-uri-dark "file://$WALLPAPER"
 gsettings set org.gnome.desktop.background picture-options 'zoom'
 Make it executable:
 
-bash
-Copy
-Edit
+```bash
+
 chmod +x ~/wallpaper_changer.sh
+```
 📌 Replace /home/yourusername/ with your actual username and ensure the directory exists.
 
-3. Create the systemd Service and Timer
+### 3. Create the systemd Service and Timer
 Navigate to the user systemd directory:
 
-bash
-Copy
-Edit
-mkdir -p ~/.config/systemd/user
-wallpaper-changer.service
-Create ~/.config/systemd/user/wallpaper-changer.service:
+```bash
 
-ini
-Copy
-Edit
+mkdir -p ~/.config/systemd/user
+```
+wallpaper-changer.service
+Create `~/.config/systemd/user/wallpaper-changer.service`:
+
+```ini
+
 [Unit]
 Description=Change GNOME wallpaper every minute
 After=graphical-session.target
@@ -82,10 +78,10 @@ ExecStart=/home/yourusername/wallpaper_changer.sh
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
 wallpaper-changer.timer
 Create ~/.config/systemd/user/wallpaper-changer.timer:
+```
+Create `~/.config/systemd/user/wallpaper-changer.timer`:
+```ini
 
-ini
-Copy
-Edit
 [Unit]
 Description=Run GNOME wallpaper changer every 1 minute
 
@@ -97,27 +93,29 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
+```
 🛠️ Update the paths in ExecStart to match your script location.
 
-4. Enable the Timer
+
+### 4. Enable the Timer
 Reload and enable the timer:
 
-bash
-Copy
-Edit
+```bash
+
 systemctl --user daemon-reexec
 systemctl --user daemon-reload
 systemctl --user enable --now wallpaper-changer.timer
-5. Check Status
+```
+
+### 5. Check Status
 Verify that the timer is active:
 
-bash
-Copy
-Edit
+```bash
 systemctl --user status wallpaper-changer.timer
+```
 You should see something like:
 
-makefile
-Copy
-Edit
-Active: active (waiting)
+Active: `active (waiting)`
+
+
+![SystemctlStatusSS](https://github.com/user-attachments/assets/6abdaeee-5abe-4042-a621-6f5ab6b840bd)
